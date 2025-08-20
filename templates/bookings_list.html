@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Reservas</h1>
+<table class="table">
+  <tr><th>Usuario</th><th>Tour</th><th>Pax</th><th>Estado</th><th>Creada</th><th>Acción</th></tr>
+  {% for b in bookings %}
+  <tr>
+    <td>{{ b.user.name }} ({{ b.user.email }})</td>
+    <td>{{ b.tour.name }} — {{ b.tour.destination.name }}</td>
+    <td>{{ b.pax }}</td>
+    <td>{{ b.status }}</td>
+    <td>{{ b.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>
+      {% if b.status != 'cancelada' and (current_user.is_admin() or b.user_id == current_user.id) %}
+      <form class="inline" method="post" action="{{ url_for('bookings_cancel', booking_id=b.id) }}">
+        <button class="btn secondary">Cancelar</button>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Panel</h1>
+<h2>Próximos tours</h2>
+<table class="table">
+  <tr><th>Nombre</th><th>Destino</th><th>Fecha</th><th>Precio</th><th>Cupos</th><th>Acción</th></tr>
+  {% for t in tours %}
+  <tr>
+    <td>{{ t.name }}</td>
+    <td>{{ t.destination.name }}</td>
+    <td>{{ t.start_date }} → {{ t.end_date }}</td>
+    <td>${{ '%.2f'|format(t.price) }}</td>
+    <td>{{ t.capacity }}</td>
+    <td>
+      <form class="inline" action="{{ url_for('bookings_new', tour_id=t.id) }}" method="post">
+        <input type="number" name="pax" value="1" min="1" style="width:80px">
+        <button class="btn">Reservar</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h2>Mis últimas reservas</h2>
+<table class="table">
+  <tr><th>Tour</th><th>Pax</th><th>Estado</th><th>Fecha</th><th>Acción</th></tr>
+  {% for b in bookings %}
+  <tr>
+    <td>{{ b.tour.name }}</td>
+    <td>{{ b.pax }}</td>
+    <td>{{ b.status }}</td>
+    <td>{{ b.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>
+      {% if b.status != 'cancelada' %}
+      <form class="inline" method="post" action="{{ url_for('bookings_cancel', booking_id=b.id) }}">
+        <button class="btn secondary">Cancelar</button>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

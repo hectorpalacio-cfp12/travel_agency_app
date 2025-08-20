@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Crear cuenta</h1>
+<form method="post" class="grid">
+  <div class="grid cols-2">
+    <div>
+      <label>Nombre</label>
+      <input type="text" name="name" required>
+    </div>
+    <div>
+      <label>Email</label>
+      <input type="email" name="email" required>
+    </div>
+  </div>
+  <div class="grid cols-2">
+    <div>
+      <label>Contraseña</label>
+      <input type="password" name="password" required>
+    </div>
+  </div>
+  <button class="btn">Registrar</button>
+</form>
+<p>¿Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesión</a></p>
+{% endblock %}

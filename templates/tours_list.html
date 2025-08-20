@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Tours</h1>
+{% if current_user.is_admin() %}
+  <p><a class="btn" href="{{ url_for('tours_new') }}">+ Nuevo tour</a></p>
+{% endif %}
+<table class="table">
+  <tr><th>Nombre</th><th>Destino</th><th>Fecha</th><th>Precio</th><th>Cupos</th><th>Reservados</th><th>Acciones</th></tr>
+  {% for t in tours %}
+  <tr>
+    <td>{{ t.name }}</td>
+    <td>{{ t.destination.name }}</td>
+    <td>{{ t.start_date }} → {{ t.end_date }}</td>
+    <td>${{ '%.2f'|format(t.price) }}</td>
+    <td>{{ t.capacity }}</td>
+    <td>{{ t.bookings|selectattr('status','ne','cancelada')|map(attribute='pax')|sum }}</td>
+    <td>
+      {% if current_user.is_admin() %}
+      <a class="btn secondary" href="{{ url_for('tours_edit', tour_id=t.id) }}">Editar</a>
+      <form class="inline" method="post" action="{{ url_for('tours_delete', tour_id=t.id) }}" onsubmit="return confirm('¿Eliminar?')">
+        <button class="btn">Eliminar</button>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
